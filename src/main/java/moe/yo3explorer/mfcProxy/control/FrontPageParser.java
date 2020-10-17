@@ -22,7 +22,6 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
         Element wrapper = contentWrapper.getElementsByClass("wrapper").first();
 
         //Partners
-        //TODO: get redirected using https://myfigurecollection.net/partners.php?mode=goto&pid={id}
         Element first = wrapper.getElementsByClass("home-partners").first();
         int[] collect = first.select("a").stream()
                 .map(x -> x.attr("href"))
@@ -33,7 +32,6 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
         result.partners = collect;
 
         //Pictures
-        //TODO: get picture using https://myfigurecollection.net/picture/{0}
         first = wrapper.getElementsByClass("home-picture-mixed-content").first();
         result.picturesOtd = first.select("a").stream()
                 .map(x -> x.attr("href"))
@@ -59,11 +57,9 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
                 .mapToInt(x -> Integer.parseInt(x[x.length - 1]))
                 .toArray();
 
+        //Featured partner
         Element side = contentWrapper.getElementById("side");
-        Element partner = side.getElementsByClass("partner").first();
-        Element a = partner.select("a").first();
-        String[] hrefs = a.attr("href").split("/");
-        result.featuredPartner = StringUtils.findFirstInteger(hrefs);
+        result.featuredPartner = getFeaturedPartner(document);
 
         //Articles
         //TODO: fetch articles from https://myfigurecollection.net/blog/46546

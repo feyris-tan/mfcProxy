@@ -54,4 +54,15 @@ public abstract class BaseParser<T>
         String title = headline.html();
         return title;
     }
+
+    protected Integer getFeaturedPartner(Document document)
+    {
+        Element content = document.getElementById("content");
+        Element contentWrapper = content.getElementsByClass("content-wrapper").first();
+        Element side = contentWrapper.getElementById("side");
+        Element partner = side.getElementsByClass("partner").first();
+        Element a = partner.select("a").first();
+        String[] hrefs = a.attr("href").split("/");
+        return StringUtils.findFirstInteger(hrefs);
+    }
 }
