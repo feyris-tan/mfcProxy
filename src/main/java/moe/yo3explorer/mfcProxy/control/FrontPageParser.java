@@ -1,6 +1,7 @@
 package moe.yo3explorer.mfcProxy.control;
 
 import moe.yo3explorer.mfcProxy.model.FrontPageModel;
+import moe.yo3explorer.mfcProxy.model.subtypes.Sale;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -40,14 +41,22 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
                 .toArray();
 
         //Sales
-        //TODO: fetch sales from https://myfigurecollection.net/classified/{id}
         Element section = wrapper.select("section").get(3);
-        result.featuredSales = section.getElementsByClass("classified-list").stream()
-                .map(x -> x.select("a").first())
-                .map(x -> x.attr("href"))
-                .map(x -> x.split("/"))
-                .mapToInt(x -> Integer.parseInt(x[x.length - 1]))
-                .toArray();
+        Element listing = section.getElementsByClass("listing").first();
+        Elements listingItems = listing.getElementsByClass("listing-item");
+        for (Element listingItem : listingItems) {
+            Element listAnchor = listingItem.getElementsByClass("list-anchor").first();
+            Element a = listAnchor.select("a").first();
+            String[] href = a.attr("href").split("/");
+            Sale sale = new Sale();
+            sale.classifiedId = Integer.parseInt(href[href.length - 1]);
+            sale.name = a.wholeText();
+
+            if (result.featuredSales == null)
+                result.featuredSales = new LinkedList<>();
+            result.featuredSales.add(sale);
+        }
+
 
         //Items on fire
         //TODO: get items using https://myfigurecollection.net/item/{0}
@@ -65,7 +74,7 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
         //Articles
         //TODO: fetch articles from https://myfigurecollection.net/blog/46546
         section = side.select("section").get(1);
-        Element listing = section.getElementsByClass("listing").first();
+        listing = section.getElementsByClass("listing").first();
         Elements li = listing.select("li");
         result.articles = new HashMap<String,List<Integer>>();
         String currentTitle = null;
