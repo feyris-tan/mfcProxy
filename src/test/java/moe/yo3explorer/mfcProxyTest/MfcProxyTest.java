@@ -1,8 +1,9 @@
 package moe.yo3explorer.mfcProxyTest;
 
 import io.quarkus.test.junit.QuarkusTest;
+import moe.yo3explorer.mfcProxy.boundary.Ad;
 import moe.yo3explorer.mfcProxy.boundary.FrontPage;
-import moe.yo3explorer.mfcProxy.boundary.PartnerRedirect;
+import moe.yo3explorer.mfcProxy.boundary.Partner;
 import moe.yo3explorer.mfcProxy.boundary.Picture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,13 @@ public class MfcProxyTest {
     FrontPage frontPage;
 
     @Inject
-    PartnerRedirect partnerRedirect;
+    Partner partnerRedirect;
 
     @Inject
     Picture picture;
+
+    @Inject
+    Ad ad;
 
     @Test
     public void doFrontPageTest()
@@ -40,5 +44,7 @@ public class MfcProxyTest {
         Response picture2 = this.picture.getPicture(2346160);
         Assertions.assertEquals(picture2.getStatus(),200);
 
+        Response ad = this.ad.getAd(218846);
+        Assertions.assertEquals(ad.getStatus(),200);
     }
 }

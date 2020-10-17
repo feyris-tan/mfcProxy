@@ -40,6 +40,7 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
                 .toArray();
 
         //Sales
+        //TODO: fetch sales from https://myfigurecollection.net/classified/{id}
         Element section = wrapper.select("section").get(3);
         result.featuredSales = section.getElementsByClass("classified-list").stream()
                 .map(x -> x.select("a").first())

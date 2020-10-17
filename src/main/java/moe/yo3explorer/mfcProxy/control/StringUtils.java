@@ -31,4 +31,19 @@ public class StringUtils
         }
         return true;
     }
+
+    public static String cutoffFileExtension(String str)
+    {
+        if (!str.contains("."))
+            return str;
+
+        if (str.charAt(0) == '.')
+            return "";
+
+        while (str.contains("."))
+        {
+            str = str.substring(0,str.length() - 1);
+        }
+        return str;
+    }
 }
