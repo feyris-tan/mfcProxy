@@ -5,7 +5,8 @@ The website https://myfigurecollection.net provides an excellent resource of inf
 However, MFC does not provide an API to access its information, which provides an obstacle to programs that want to use its information.
 This project is a way to programmatically access the information on myfigurecollection.net 
 
-I began writing this when I got tired of parsing their HTML manually each time. I took some inspiratin from jikan.moe, an API to parse data of MyAnimeList.
+I began writing this when I got tired of parsing their HTML manually each time. Also I wanted to become more familiar with JSoup.
+I took some inspiration from jikan.moe and vgmdb.info, APIs for MyAnimeList and VGMdb.net
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 

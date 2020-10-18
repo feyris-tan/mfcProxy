@@ -1,5 +1,10 @@
 package moe.yo3explorer.mfcProxy.control;
 
+import moe.yo3explorer.mfcProxy.model.subtypes.Price;
+import org.jboss.logging.Logger;
+
+import java.util.Currency;
+
 public class StringUtils
 {
     private StringUtils() {}
@@ -45,5 +50,42 @@ public class StringUtils
             str = str.substring(0,str.length() - 1);
         }
         return str;
+    }
+
+    private static Logger logger;
+    private static void prepareLogger()
+    {
+        if (logger == null) {
+            logger = Logger.getLogger(StringUtils.class);
+        }
+    }
+
+    public static Price parsePrice(String str)
+    {
+        prepareLogger();
+
+        if (str.contains(","))
+            str = str.replace(",","");
+
+        Price result = new Price();
+
+        if (str.startsWith("¥")) {
+            result.currency = "JPY";
+            str = str.substring(1);
+        }
+        else
+        {
+            logger.warnf("Failed to determine currency from: " + str);
+            return null;
+        }
+
+        result.units = Double.parseDouble(str);
+        return result;
+    }
+
+    public static int findFirstIntegerOrZero(String...args)
+    {
+        Integer firstInteger = findFirstInteger(args);
+        return firstInteger != null ? firstInteger : 0;
     }
 }
