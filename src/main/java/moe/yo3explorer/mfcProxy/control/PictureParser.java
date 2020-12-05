@@ -112,6 +112,9 @@ public class PictureParser extends BaseParser<PictureModel> {
         //TODO: Fetch Club contents from https://myfigurecollection.net/club/{id}
         result.clubs = super.parseClubs(document);
 
+        //Comments
+        result.comments = super.parseComments(document);
+
         return result;
     }
 

@@ -1,6 +1,7 @@
 package moe.yo3explorer.mfcProxy.model;
 
 import moe.yo3explorer.mfcProxy.model.subtypes.Award;
+import moe.yo3explorer.mfcProxy.model.subtypes.Comment;
 import moe.yo3explorer.mfcProxy.model.subtypes.ObjectStats;
 import moe.yo3explorer.mfcProxy.model.subtypes.RelatedItem;
 
@@ -22,4 +23,5 @@ public class PictureModel {
     public int[] tags;
     public int[] clubs;
     public ObjectStats stats;
+    public Comment[] comments;
 }

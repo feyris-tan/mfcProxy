@@ -1,6 +1,8 @@
 package moe.yo3explorer.mfcProxy.control;
 
 import moe.yo3explorer.mfcProxy.SimpleWebClient;
+import moe.yo3explorer.mfcProxy.model.subtypes.Comment;
+import moe.yo3explorer.mfcProxy.model.subtypes.Header;
 import moe.yo3explorer.mfcProxy.model.subtypes.ObjectStats;
 import moe.yo3explorer.mfcProxy.model.subtypes.RelatedItem;
 import org.jboss.logging.Logger;
@@ -174,5 +176,75 @@ public abstract class BaseParser<T>
                 .map(x -> x.split("/"))
                 .mapToInt(x -> Integer.parseInt(x[x.length - 1]))
                 .toArray();
+    }
+
+    protected Header parseHeader(Document document)
+    {
+        Header result = new Header();
+
+        //Name
+        result.name = getTitle(document);
+
+        //Icon URL
+        Element h1HeadlineIcon = document.getElementsByClass("h1-headline-icon").first();
+        Element thumbnail = h1HeadlineIcon.getElementsByClass("thumbnail").first();
+        if (thumbnail == null)
+        {
+            thumbnail = h1HeadlineIcon.getElementById("thumbnail");
+        }
+        result.thumbnail = thumbnail.attr("src");
+
+        //Previous
+        Element h1metaaction = document.getElementsByClass("h1-meta-actions").first();
+        Element prev = h1metaaction.getElementsByClass("prev").first();
+        result.previous = StringUtils.findFirstInteger(prev.attr("href").split("/"));
+
+        //Nächstes
+        Element next = h1metaaction.getElementsByClass("next").first();
+        result.next = StringUtils.findFirstInteger(next.attr("href").split("/"));
+
+        return result;
+    }
+
+    protected Comment[] parseComments(Document document)
+    {
+        Elements commentClasses = document.getElementsByClass("comments");
+        if (commentClasses.size() == 0)
+        {
+            Element tbxTargetCountComments = document.getElementsByClass("tbx-target-COUNTCOMMENTS").first();
+            Element h2 = tbxTargetCountComments.parent();
+            Element section = h2.parent();
+            commentClasses = new Elements();
+            commentClasses.add(section);
+        }
+        if (commentClasses.size() > 1)
+            throw new RuntimeException("wait what? multiple comments?");
+        Element comment = commentClasses.first();
+        Elements tbxTargets = comment.getElementsByClass("tbx-target");
+        Comment[] result = new Comment[tbxTargets.size()];
+        for (int i = 0; i < tbxTargets.size(); i++)
+        {
+            Element tbxTarget = tbxTargets.get(i);
+            comment = tbxTarget.getElementsByClass("comment").first();
+            Element userExpression = comment.getElementsByClass("user-expression").first();
+            Element expression = userExpression.getElementsByClass("expression").first();
+            Element username = expression.getElementsByClass("username").first();
+            result[i] = new Comment();
+            result[i].username = username.wholeText().trim();
+
+            Element content = expression.getElementsByClass("content").first();
+            result[i].content = content.wholeText();
+
+            Element meta = expression.getElementsByClass("meta").first();
+            Element time = meta.getElementsByClass("time").first();
+            Elements title = time.select("span[title]");
+            result[i].time = DateUtils.mmddyyyyhhmmssToUnixtime(title.attr("title"));
+
+            String id = tbxTarget.id();
+            assert id.startsWith("refCommentId-");
+            id = id.substring(13);
+            result[i].refCommentId = Long.parseLong(id);
+        }
+        return result;
     }
 }

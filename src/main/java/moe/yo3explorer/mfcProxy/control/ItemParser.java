@@ -17,18 +17,8 @@ import java.util.stream.Collectors;
 public class ItemParser extends BaseParser<ItemModel> {
     @Override
     protected ItemModel parse(Document document) {
-        //Name
         ItemModel result = new ItemModel();
-        result.name = super.getTitle(document);
-
-        //Previous
-        Element h1metaaction = document.getElementsByClass("h1-meta-actions").first();
-        Element prev = h1metaaction.getElementsByClass("prev").first();
-        result.previous = StringUtils.findFirstInteger(prev.attr("href").split("/"));
-
-        //Nächstes
-        Element next = h1metaaction.getElementsByClass("next").first();
-        result.next = StringUtils.findFirstInteger(next.attr("href").split("/"));
+        result.header = parseHeader(document);
 
         //Vertical Featured Partner
         Element contentWrapper = document.getElementsByClass("content-wrapper").first();
@@ -442,6 +432,9 @@ public class ItemParser extends BaseParser<ItemModel> {
                     break;
             }
         }
+
+        //Comments
+        result.comments = super.parseComments(document);
 
         return result;
     }

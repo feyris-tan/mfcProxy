@@ -59,7 +59,6 @@ public class FrontPageParser extends BaseParser<FrontPageModel> {
 
 
         //Items on fire
-        //TODO: get items using https://myfigurecollection.net/item/{0}
         Element itemIcons = wrapper.getElementsByClass("item-icons").first();
         result.itemsOnFire = itemIcons.select("a").stream()
                 .map(x -> x.attr("href"))

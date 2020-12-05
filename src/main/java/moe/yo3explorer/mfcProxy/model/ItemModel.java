@@ -7,9 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ItemModel {
-    public String name;
-    public Integer previous;
-    public Integer next;
     public Integer featuredPartner2;
     public String pictureUrl;
     public Category category;
@@ -46,4 +43,6 @@ public class ItemModel {
     public long addedOn;
     public String editedBy;
     public long editedOn;
+    public Header header;
+    public Comment[] comments;
 }
